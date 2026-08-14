@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - Expense Tracker</title>
+    <link rel="stylesheet" href="style.css" />
+    <script>
+      // bounce back to the login page before anything renders
+      if (!localStorage.getItem("token")) {
+        window.location.replace("index.html");
+      }
+    </script>
+  </head>
+  <body>
+    <header class="topbar">
+      <span class="logo">Expense Tracker</span>
+      <button type="button" id="logout" class="logout">Log out</button>
+    </header>
+
+    <main class="dashboard">
+      <h1 id="greeting">Welcome!</h1>
+      <p class="subtle">Track your expenses</p>
+    </main>
+
+    <script src="dashboard.js"></script>
+  </body>
+</html>

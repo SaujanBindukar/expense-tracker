@@ -51,8 +51,7 @@ async function submitForm(form, endpoint, body) {
     localStorage.setItem("token", data.token);
     localStorage.setItem("user", JSON.stringify(data.user));
 
-    showMessage(`Welcome, ${data.user.name}!`, "success");
-    form.reset();
+    window.location.href = "dashboard.html";
   } catch (error) {
     showMessage("Cannot reach the server. Is it running?", "error");
   } finally {
