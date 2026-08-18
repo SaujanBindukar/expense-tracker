@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -18,9 +18,76 @@
       <button type="button" id="logout" class="logout">Log out</button>
     </header>
 
-    <main class="dashboard">
-      <h1 id="greeting">Welcome!</h1>
-      <p class="subtle">Track your expenses</p>
+    <main class="dashboard-shell">
+      <aside class="sidebar">
+        <div class="sidebar-card">
+          <p class="sidebar-label">Navigation</p>
+          <h1 id="greeting">Welcome!</h1>
+          <p class="subtle">Jump between the main dashboard sections.</p>
+        </div>
+
+        <nav class="sidebar-nav" aria-label="Dashboard navigation">
+          <button
+            type="button"
+            class="nav-link active"
+            data-section="dashboard"
+          >
+            Dashboard
+          </button>
+          <button type="button" class="nav-link" data-section="expenses">
+            My Expenses
+          </button>
+          <button type="button" class="nav-link" data-section="history">
+            History
+          </button>
+        </nav>
+      </aside>
+
+      <section class="dashboard-content">
+        <section class="panel section active" data-section="dashboard">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Dashboard</p>
+              <h2>Overview</h2>
+            </div>
+          </div>
+          <div class="card simple-panel">
+            <h3>Welcome to your dashboard</h3>
+            <p class="subtle">
+              Use the side navigation to switch between the main areas of the
+              app.
+            </p>
+          </div>
+        </section>
+
+        <section class="panel section" data-section="expenses">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">My Expenses</p>
+              <h2>Expense area</h2>
+            </div>
+          </div>
+          <div class="card simple-panel">
+            <p class="subtle">
+              This section is reserved for your expense list, forms, or filters.
+            </p>
+          </div>
+        </section>
+
+        <section class="panel section" data-section="history">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">History</p>
+              <h2>History area</h2>
+            </div>
+          </div>
+          <div class="card simple-panel">
+            <p class="subtle">
+              This section can show past transactions, reports, or charts later.
+            </p>
+          </div>
+        </section>
+      </section>
     </main>
 
     <script src="dashboard.js"></script>
