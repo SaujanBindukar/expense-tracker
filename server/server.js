@@ -4,7 +4,9 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const pool = require("./database");
-const authRouter = require("./auth");
+const requireAuth = require("./middleware/auth");
+const authRouter = require("./routes/auth");
+const expensesRouter = require("./routes/expenses");
 
 const app = express();
 
@@ -12,13 +14,14 @@ app.use(express.json());
 app.use(cors());
 
 app.use("/api/auth", authRouter);
+app.use("/api/expenses", requireAuth, expensesRouter);
 
 app.get("/db-test", async (_req, res) => {
   try {
-    const result = await pool.query("SELECT NOW() AS current_time");
+    const [rows] = await pool.query("SELECT NOW() AS current_time");
     res.json({
       connected: true,
-      currentTime: result.rows[0].current_time,
+      currentTime: rows[0].current_time,
     });
   } catch (error) {
     res.status(500).json({
