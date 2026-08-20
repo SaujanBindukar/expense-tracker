@@ -55,3 +55,5 @@ This is a your personal expense tracker application.
 
 5.  Sign up for an account, log in, set a monthly budget, and start adding
     expenses.
+    Email: saujan@gmail.com
+    Password: saujan123
