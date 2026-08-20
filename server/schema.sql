@@ -1,5 +1,3 @@
--- Expense Tracker schema (MySQL 8.0)
--- Run with: mysql -u root -p < schema.sql
 
 CREATE DATABASE IF NOT EXISTS `expense-tracker`;
 USE `expense-tracker`;
