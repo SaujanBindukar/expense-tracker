@@ -536,11 +536,12 @@ input:focus {
   min-width: 0;
 }
 
+/* the track needs a definite height so the bar's percentage height resolves */
 .daily-bar-track {
   display: flex;
   align-items: end;
   width: 100%;
-  min-height: 140px;
+  height: 160px;
   padding: 0 2px;
 }
 

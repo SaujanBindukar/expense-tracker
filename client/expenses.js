@@ -70,6 +70,7 @@ function escapeHtml(value) {
   });
 }
 
+//format currency
 function formatMoney(amount) {
   return `${CURRENCY} ${amount.toLocaleString("en-IN", {
     minimumFractionDigits: 2,
@@ -87,17 +88,20 @@ function formatDate(spentOn) {
   });
 }
 
+//display message
 function showMessage(text, type) {
   formMessage.textContent = text;
   formMessage.className = type ? `message ${type}` : "message";
 }
 
+//getting today date
 function todayISO() {
   const now = new Date();
   const month = String(now.getMonth() + 1).padStart(2, "0");
   return `${now.getFullYear()}-${month}-${String(now.getDate()).padStart(2, "0")}`;
 }
 
+//notify dashboard to refresh
 function notifyDashboard(month) {
   window.dispatchEvent(
     new CustomEvent("expense-dashboard-refresh", {
@@ -122,6 +126,7 @@ function renderStats(expenses, total) {
   document.getElementById("stat-top").textContent = top ? top[0] : "—";
 }
 
+// render the list of expenses, or a message if there are none
 function renderList(expenses) {
   if (!expenses.length) {
     list.innerHTML = `<p class="subtle">No expenses yet for this range. Add one on the left.</p>`;
@@ -163,6 +168,7 @@ async function loadCategories() {
       .join("");
 }
 
+// load the expenses for the current month or all time, and render them
 async function loadExpenses() {
   const month = monthFilter.value;
   rangePill.textContent = month ? "Filtered by month" : "All time";
@@ -181,6 +187,7 @@ async function loadExpenses() {
 
 // --- the form ---------------------------------------------------------------
 
+// reset the form to its default "add" state
 function resetForm() {
   editingId = null;
   form.reset();
@@ -190,7 +197,7 @@ function resetForm() {
   cancelButton.classList.add("hidden");
   showMessage("");
 }
-
+// start editing an existing expense, populating the form with its data
 function startEditing(expense) {
   editingId = expense.expenseId;
   amountInput.value = expense.amount;
@@ -204,7 +211,7 @@ function startEditing(expense) {
   showMessage("");
   form.scrollIntoView({ behavior: "smooth", block: "nearest" });
 }
-
+// --- event listeners --------------------------------------------------------
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
 
@@ -250,7 +257,7 @@ form.addEventListener("submit", async (event) => {
       submitButton.textContent = originalText;
   }
 });
-
+// cancel editing and reset the form
 cancelButton.addEventListener("click", resetForm);
 
 // One listener on the list covers every row's buttons, including new ones.
@@ -278,9 +285,9 @@ list.addEventListener("click", async (event) => {
     }
   }
 });
-
+// filter by month or show all
 monthFilter.addEventListener("change", loadExpenses);
-
+// show all expenses, clearing the month filter
 showAllButton.addEventListener("click", () => {
   monthFilter.value = "";
   loadExpenses();

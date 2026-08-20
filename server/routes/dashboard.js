@@ -17,6 +17,13 @@ function toMonthStart(month) {
   return `${month}-01`;
 }
 
+// YYYY-MM-DD in local time; toISOString() would shift the day on non-UTC offsets
+function toLocalISODate(date) {
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${date.getFullYear()}-${month}-${day}`;
+}
+
 function startOfWeek(date) {
   const value = new Date(date);
   const day = value.getDay();
@@ -76,8 +83,8 @@ router.get("/", async (req, res) => {
   const weekStart = startOfWeek(new Date());
   const weekEnd = new Date();
   weekEnd.setHours(23, 59, 59, 999);
-  const weekStartISO = weekStart.toISOString().slice(0, 10);
-  const weekEndISO = weekEnd.toISOString().slice(0, 10);
+  const weekStartISO = toLocalISODate(weekStart);
+  const weekEndISO = toLocalISODate(weekEnd);
 
   try {
     const [[budgetRow]] = await pool.query(
@@ -112,7 +119,7 @@ router.get("/", async (req, res) => {
     );
 
     const [dailyRows] = await pool.query(
-      `SELECT DATE(spent_on) AS date,
+      `SELECT DATE_FORMAT(spent_on, '%Y-%m-%d') AS date,
               COALESCE(SUM(amount), 0) AS amount
          FROM expenses
         WHERE user_id = ?
@@ -132,8 +139,8 @@ router.get("/", async (req, res) => {
     const weekly = Array.from({ length: 7 }, (_, index) => {
       const current = new Date(weekStart);
       current.setDate(weekStart.getDate() + index);
-      const date = current.toISOString().slice(0, 10);
-      const match = dailyRows.find((row) => row.date === date);
+      const date = toLocalISODate(current);
+      const match = dailyRows.find((row) => String(row.date) === date);
       return {
         date,
         label: current.toLocaleDateString("en-GB", { weekday: "short" }),

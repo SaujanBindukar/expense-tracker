@@ -26,23 +26,25 @@ const insightList = document.getElementById("insight-list");
 
 let currentMonth = todayISO().slice(0, 7);
 
+//logged in user is stored in local storage, if it exists, display a greeting
 if (user) {
   document.getElementById("greeting").textContent = `Welcome, ${user.name}!`;
 }
-
+//
 function todayISO() {
   const now = new Date();
   const month = String(now.getMonth() + 1).padStart(2, "0");
   return `${now.getFullYear()}-${month}-${String(now.getDate()).padStart(2, "0")}`;
 }
 
+// get the current month in YYYY-MM format
 function formatMoney(amount) {
   return `${DASHBOARD_CURRENCY} ${Number(amount).toLocaleString("en-IN", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   })}`;
 }
-
+//helper to render HTML safely
 function escapeHtml(value) {
   return String(value).replace(/[&<>"']/g, (character) => {
     return {
@@ -54,7 +56,7 @@ function escapeHtml(value) {
     }[character];
   });
 }
-
+// label for the month in a human-readable format, e.g. "August 2026"
 function formatMonthLabel(month) {
   const [year, monthNumber] = month.split("-").map(Number);
   return new Date(year, monthNumber - 1, 1).toLocaleDateString("en-GB", {
@@ -62,25 +64,31 @@ function formatMonthLabel(month) {
     year: "numeric",
   });
 }
-
+// YYYY-MM-DD in local time; toISOString() would shift the day on non-UTC offsets
+function toLocalISODate(date) {
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  return `${date.getFullYear()}-${month}-${String(date.getDate()).padStart(2, "0")}`;
+}
+//format day
 function formatDayLabel(day) {
   return day.label || String(day.day ?? day).padStart(2, "0");
 }
-
+// Monday of the week containing the given date
+function startOfWeek(date) {
+  const value = new Date(date);
+  const day = value.getDay();
+  value.setDate(value.getDate() + (day === 0 ? -6 : 1 - day));
+  value.setHours(0, 0, 0, 0);
+  return value;
+}
+// weekly series for the current Mon-Sun week, based on the daily data and the current month
 function buildWeeklySeries(data) {
   if (Array.isArray(data.weekly)) return data.weekly;
 
   if (!Array.isArray(data.daily) || !data.month) return [];
 
   const [year, monthNumber] = data.month.split("-").map(Number);
-  const today = new Date();
-  const lastDay = new Date(
-    today.getFullYear(),
-    today.getMonth(),
-    today.getDate(),
-  );
-  const start = new Date(lastDay);
-  start.setDate(lastDay.getDate() - 6);
+  const start = startOfWeek(new Date());
 
   const dailyByDate = new Map(
     data.daily.map((day) => [
@@ -92,7 +100,7 @@ function buildWeeklySeries(data) {
   return Array.from({ length: 7 }, (_, index) => {
     const current = new Date(start);
     current.setDate(start.getDate() + index);
-    const date = current.toISOString().slice(0, 10);
+    const date = toLocalISODate(current);
     return {
       date,
       label: current.toLocaleDateString("en-GB", { weekday: "short" }),
@@ -179,9 +187,9 @@ function renderWeeklyTrend(weekly) {
       return `
         <div class="daily-bar">
           <div class="daily-bar-track">
-            <span style="height: ${height}%" title="${day.label}: ${formatMoney(day.amount)}"></span>
+            <span style="height: ${height}%" title="${escapeHtml(formatDayLabel(day))}: ${formatMoney(day.amount)}"></span>
           </div>
-          <strong>${formatDayLabel(day)}</strong>
+          <strong>${escapeHtml(formatDayLabel(day))}</strong>
           <span>${day.amount ? formatMoney(day.amount) : "—"}</span>
         </div>`;
     })
@@ -284,9 +292,11 @@ function renderBudgetSummary(data) {
   } else {
     dashboardMonthPill.textContent = "Budget needed";
   }
-
+  //category breakdown of expenses
   renderCategoryBreakdown(data.categories);
+  //bar graph of last 7 days
   renderWeeklyTrend(buildWeeklySeries(data));
+  //insights are based on the summary data, which is already calculated on the server side
   renderInsights(summary);
 }
 
