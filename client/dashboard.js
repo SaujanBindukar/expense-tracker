@@ -2,7 +2,7 @@ const user = JSON.parse(localStorage.getItem("user") || "null");
 const navButtons = document.querySelectorAll(".nav-link");
 const sections = document.querySelectorAll(".section");
 const DASHBOARD_API_BASE = "http://localhost:3000/api";
-const DASHBOARD_CURRENCY = "Rs";
+const DASHBOARD_CURRENCY = "$";
 
 const budgetForm = document.getElementById("budget-form");
 const budgetAmountInput = document.getElementById("budget-amount");
