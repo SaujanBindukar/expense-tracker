@@ -7,6 +7,7 @@ const pool = require("./database");
 const requireAuth = require("./middleware/auth");
 const authRouter = require("./routes/auth");
 const expensesRouter = require("./routes/expenses");
+const categoriesRouter = require("./routes/categories");
 
 const app = express();
 
@@ -15,10 +16,12 @@ app.use(cors());
 
 app.use("/api/auth", authRouter);
 app.use("/api/expenses", requireAuth, expensesRouter);
+app.use("/api/categories", requireAuth, categoriesRouter);
 
 app.get("/db-test", async (_req, res) => {
   try {
-    const [rows] = await pool.query("SELECT NOW() AS current_time");
+    // current_time is a reserved word in MySQL, so the alias needs backticks
+    const [rows] = await pool.query("SELECT NOW() AS `current_time`");
     res.json({
       connected: true,
       currentTime: rows[0].current_time,
