@@ -21,9 +21,7 @@
     <main class="dashboard-shell">
       <aside class="sidebar">
         <div class="sidebar-card">
-          <p class="sidebar-label">Navigation</p>
           <h1 id="greeting">Welcome!</h1>
-          <p class="subtle">Jump between the main dashboard sections.</p>
         </div>
 
         <nav class="sidebar-nav" aria-label="Dashboard navigation">
@@ -48,15 +46,97 @@
           <div class="section-heading">
             <div>
               <p class="eyebrow">Dashboard</p>
-              <h2>Overview</h2>
+              <h2>Budget overview</h2>
+            </div>
+            <span class="status-pill muted" id="dashboard-month-pill"
+              >This month</span
+            >
+          </div>
+
+          <div class="stats-grid">
+            <div class="card stat-card">
+              <span class="stat-label">Spent</span>
+              <strong id="overview-spent">—</strong>
+              <span class="subtle" id="overview-spent-note"
+                >Current month spending</span
+              >
+            </div>
+            <div class="card stat-card">
+              <span class="stat-label">Budget left</span>
+              <strong id="overview-remaining">—</strong>
+              <span class="subtle" id="overview-status"
+                >Set a budget to track progress</span
+              >
+            </div>
+            <div class="card stat-card">
+              <span class="stat-label">Budget used</span>
+              <strong id="overview-progress">—</strong>
+              <span class="subtle" id="overview-alert">No alerts yet</span>
             </div>
           </div>
-          <div class="card simple-panel">
-            <h3>Welcome to your dashboard</h3>
-            <p class="subtle">
-              Use the side navigation to switch between the main areas of the
-              app.
-            </p>
+
+          <div class="budget-layout">
+            <form class="card progress-card" id="budget-form" novalidate>
+              <h3>Monthly budget</h3>
+              <p class="subtle" id="budget-month-label">For this month</p>
+
+              <label for="budget-amount">Budget amount</label>
+              <input
+                type="number"
+                id="budget-amount"
+                min="0.01"
+                step="0.01"
+                placeholder="25000.00"
+                required
+              />
+
+              <div class="progress-bar" aria-label="Budget usage">
+                <span id="budget-progress-fill" style="width: 0%"></span>
+              </div>
+
+              <div class="budget-summary-row">
+                <span class="subtle" id="budget-summary-left"
+                  >No budget set</span
+                >
+                <strong id="budget-summary-value">—</strong>
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="submit" id="budget-submit">
+                  Save budget
+                </button>
+              </div>
+
+              <p class="message" id="budget-message"></p>
+            </form>
+
+            <div class="card budget-breakdown">
+              <div class="section-heading compact">
+                <h3>Category breakdown</h3>
+                <span class="status-pill muted" id="category-pill"
+                  >Loading…</span
+                >
+              </div>
+              <div class="breakdown-list" id="category-breakdown">
+                <p class="subtle">Loading…</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="feature-grid">
+            <div class="card feature-card">
+              <h3>Weekly trend</h3>
+              <div class="daily-chart" id="daily-chart">
+                <p class="subtle">Loading…</p>
+              </div>
+            </div>
+
+            <div class="card feature-card">
+              <h3>Insights</h3>
+              <div class="breakdown-list" id="insight-list">
+                <p class="subtle">Loading…</p>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -64,13 +144,91 @@
           <div class="section-heading">
             <div>
               <p class="eyebrow">My Expenses</p>
-              <h2>Expense area</h2>
+              <h2>Track your spending</h2>
+            </div>
+            <span class="status-pill" id="range-pill">This month</span>
+          </div>
+
+          <div class="stats-grid">
+            <div class="card stat-card">
+              <span class="stat-label">Total spent</span>
+              <strong id="stat-total">—</strong>
+            </div>
+            <div class="card stat-card">
+              <span class="stat-label">Expenses</span>
+              <strong id="stat-count">—</strong>
+            </div>
+            <div class="card stat-card">
+              <span class="stat-label">Top category</span>
+              <strong id="stat-top">—</strong>
             </div>
           </div>
-          <div class="card simple-panel">
-            <p class="subtle">
-              This section is reserved for your expense list, forms, or filters.
-            </p>
+
+          <div class="content-grid two-col">
+            <!-- add / edit form: the same form does both -->
+            <form class="card form-card" id="expense-form" novalidate>
+              <h3 id="form-title">Add an expense</h3>
+
+              <label for="expense-amount">Amount</label>
+              <input
+                type="number"
+                id="expense-amount"
+                min="0.01"
+                step="0.01"
+                placeholder="450.00"
+                required
+              />
+
+              <label for="expense-date">Date</label>
+              <input type="date" id="expense-date" required />
+
+              <label for="expense-category">Category</label>
+              <select id="expense-category" required>
+                <option value="">Loading…</option>
+              </select>
+
+              <label for="expense-note"
+                >Note <span class="subtle">(optional)</span></label
+              >
+              <input
+                type="text"
+                id="expense-note"
+                maxlength="255"
+                placeholder="Lunch with team"
+              />
+
+              <div class="form-actions">
+                <button type="submit" class="submit" id="expense-submit">
+                  Add expense
+                </button>
+                <button
+                  type="button"
+                  class="ghost-button hidden"
+                  id="expense-cancel"
+                >
+                  Cancel
+                </button>
+              </div>
+
+              <p class="message" id="expense-message"></p>
+            </form>
+
+            <!-- list for the selected month -->
+            <div class="card list-card">
+              <div class="section-heading compact">
+                <h3>Your expenses</h3>
+                <div class="filter-row">
+                  <input type="month" id="month-filter" class="filter-input" />
+                  <button type="button" class="ghost-button" id="show-all">
+                    All time
+                  </button>
+                </div>
+              </div>
+
+              <div class="transaction-list" id="expense-list">
+                <p class="subtle">Loading…</p>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -91,5 +249,6 @@
     </main>
 
     <script src="dashboard.js"></script>
+    <script src="expenses.js"></script>
   </body>
 </html>
