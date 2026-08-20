@@ -10,7 +10,6 @@ const pool = mysql
     port: Number(process.env.MYSQL_PORT || 3306),
     waitForConnections: true,
     connectionLimit: 10,
-    // DECIMAL comes back as a string so cent amounts stay exact.
     decimalNumbers: false,
   })
   .promise();
