@@ -72,7 +72,7 @@ function escapeHtml(value) {
 
 //format currency
 function formatMoney(amount) {
-  return `${CURRENCY} ${amount.toLocaleString("en-IN", {
+  return `${CURRENCY} ${amount.toLocaleString("en-US", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   })}`;

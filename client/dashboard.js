@@ -39,7 +39,7 @@ function todayISO() {
 
 // get the current month in YYYY-MM format
 function formatMoney(amount) {
-  return `${DASHBOARD_CURRENCY} ${Number(amount).toLocaleString("en-IN", {
+  return `${DASHBOARD_CURRENCY} ${Number(amount).toLocaleString("en-US", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   })}`;
